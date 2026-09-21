@@ -1,6 +1,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- ============================================ -->
+    <!-- РАЗРЕШЕНИЯ                                    -->
+    <!-- ============================================ -->
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Чтение аудиофайлов (Android 13+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
+    <!-- Чтение файлов (Android 12 и ниже) -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Фоновое воспроизведение — ОБЯЗАТЕЛЬНО для аудиоплеера -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <!-- Уведомление с кнопками play/pause (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Плеер не должен засыпать -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
       android:name=".MainApplication"
@@ -23,5 +45,24 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+     
+      <service
+        android:name="com.doublesymmetry.trackplayer.service.MusicService"
+        android:foregroundServiceType="mediaPlayback"
+        android:exported="false">
+        <intent-filter>
+          <action android:name="androidx.media3.session.MediaSessionService" />
+        </intent-filter>
+      </service>
+
+      <receiver
+        android:name="com.doublesymmetry.trackplayer.receiver.MediaButtonReceiver"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="android.intent.action.MEDIA_BUTTON" />
+        </intent-filter>
+      </receiver>
+      
+
     </application>
 </manifest>
