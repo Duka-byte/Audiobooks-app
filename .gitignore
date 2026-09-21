@@ -1,9 +1,15 @@
-# OSX
-#
+# ============ OSX ============
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
 
-# Xcode
-#
+# ============ Windows ============
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============ Xcode (iOS) ============
 build/
 *.pbxuser
 !default.pbxuser
@@ -22,8 +28,7 @@ DerivedData
 *.xcuserstate
 **/.xcode.env.local
 
-# Android/IntelliJ
-#
+# ============ Android ============
 build/
 .idea
 .gradle
@@ -34,42 +39,67 @@ local.properties
 *.keystore
 !debug.keystore
 .kotlin/
+android/app/release/
+android/app/debug/
+android/captures/
 
-# node.js
-#
+# ============ Node ============
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+.pnpm-debug.log*
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
+# ============ Secrets (КРИТИЧНО) ============
+.env
+.env.*
+!.env.example
+google-services.json
+GoogleService-Info.plist
+android/keystore.properties
+sentry.properties
 
+# ============ Fastlane ============
 **/fastlane/report.xml
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
 
-# Bundle artifact
+# ============ Bundles ============
 *.jsbundle
 
-# Ruby / CocoaPods
+# ============ Ruby / CocoaPods ============
 **/Pods/
 /vendor/bundle/
 
-# Temporary files created by Metro to check the health of the file watcher
+# ============ Metro ============
 .metro-health-check*
 
-# testing
+# ============ Testing ============
 /coverage
+.nyc_output/
 
-# Yarn
+# ============ Yarn ============
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# ============ TypeScript ============
+*.tsbuildinfo
+
+# ============ Cache / temp ============
+.cache/
+.temp/
+*.tmp
+*.swp
+*~
+
+# ============ Editor ============
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
