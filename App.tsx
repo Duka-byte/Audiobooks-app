@@ -1,64 +1,36 @@
 // App.tsx
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
-import LibraryScreen from './src/screens/LibraryScreen';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { setupPlayer } from './src/player/setupPlayer';
+import LibraryScreen from './src/screens/LibraryScreen';
+import PlayerScreen from './src/screens/PlayerScreen';
 
 export default function App() {
   const [ready, setReady] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [screen, setScreen] = useState<'library' | 'player'>('library');
 
   useEffect(() => {
     (async () => {
-      try {
-        const ok = await setupPlayer();
-        if (!ok) {
-          setError('Не удалось инициализировать плеер');
-          return;
-        }
-        setReady(true);
-      } catch (e: any) {
-        console.warn('setupPlayer error:', e);
-        setError(e?.message ?? 'Ошибка инициализации плеера');
-      }
+      const ok = await setupPlayer();
+      setReady(ok);
     })();
   }, []);
 
-  if (error) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.center}>
-          <Text style={styles.error}>{error}</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   if (!ready) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.center}>
-          <Text>Подготовка плеера…</Text>
-        </View>
-      </SafeAreaView>
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" />
+      </View>
     );
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <LibraryScreen />
-    </SafeAreaView>
+  return screen === 'library' ? (
+    <LibraryScreen onOpenPlayer={() => setScreen('player')} />
+  ) : (
+    <PlayerScreen onBack={() => setScreen('library')} />
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  error: { color: '#c00', textAlign: 'center' },
+  loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });

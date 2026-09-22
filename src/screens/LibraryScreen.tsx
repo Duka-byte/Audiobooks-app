@@ -1,4 +1,3 @@
-// Список книг
 // src/screens/LibraryScreen.tsx
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -12,12 +11,13 @@ import {
 import { scanBooks, Book } from '../data/scanBooks';
 import { playBook } from '../player/playBook';
 
-// Путь к папке с книгами.
-// На Android 11+ для произвольной папки это не сработает —
-// нужен SAF (см. ниже про pickDirectory).
 const BOOKS_ROOT = '/sdcard/Audiobooks';
 
-export default function LibraryScreen() {
+type Props = {
+  onOpenPlayer: () => void;
+};
+
+export default function LibraryScreen({ onOpenPlayer }: Props) {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,16 +40,17 @@ export default function LibraryScreen() {
     load();
   }, [load]);
 
-  const onPressBook = useCallback(async (book: Book) => {
-    try {
-      // Запускаем книгу с начала (0-я глава, позиция 0).
-      // Если у вас реализовано сохранение прогресса — читайте его здесь
-      // и передавайте startIndex / position.
-      await playBook(book, 0, 0);
-    } catch (e) {
-      console.warn('playBook error:', e);
-    }
-  }, []);
+  const onPressBook = useCallback(
+    async (book: Book) => {
+      try {
+        await playBook(book, 0, 0);
+        onOpenPlayer();
+      } catch (e) {
+        console.warn('playBook error:', e);
+      }
+    },
+    [onOpenPlayer],
+  );
 
   if (loading) {
     return (
@@ -75,8 +76,7 @@ export default function LibraryScreen() {
     return (
       <View style={styles.center}>
         <Text style={styles.hint}>
-          Книг не найдено.{'\n'}
-          Проверьте папку: {BOOKS_ROOT}
+          Книг не найдено.{'\n'}Проверьте папку: {BOOKS_ROOT}
         </Text>
         <Pressable style={styles.button} onPress={load}>
           <Text style={styles.buttonText}>Обновить</Text>
